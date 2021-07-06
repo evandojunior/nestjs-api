@@ -1,8 +1,8 @@
 {
-  "name": "test-vipcommerce",
+  "name": "nestjs-api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Repository for demonstrate my knowledge in Nestjs, TypeORM and others techs",
+  "author": "Evando Junior <evando.junior@live.com>",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
