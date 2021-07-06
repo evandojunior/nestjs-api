@@ -1,26 +1,42 @@
 import { Injectable } from '@nestjs/common';
 import { CreateClientDto } from './dto/create-client.dto';
 import { UpdateClientDto } from './dto/update-client.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
+import { Client } from './entities/client.entity';
 
 @Injectable()
 export class ClientsService {
+  constructor(
+    @InjectRepository(Client)
+    private repository: Repository<Client>,
+  ) {}
+
   create(createClientDto: CreateClientDto) {
-    return 'This action adds a new client';
+    const client = this.repository.create(createClientDto);
+    return this.repository.save(client);
   }
 
   findAll() {
-    return `This action returns all clients`;
+    return this.repository.find();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} client`;
+    return this.repository.findOne(id);
   }
 
-  update(id: number, updateClientDto: UpdateClientDto) {
-    return `This action updates a #${id} client`;
+  async update(id: number, updateClientDto: UpdateClientDto) {
+    const updateResult = await this.repository.update(id, updateClientDto);
+    if (!updateResult.affected) {
+      throw new EntityNotFoundError(Client, id);
+    }
+    return this.repository.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} client`;
+  async remove(id: number) {
+    const deleteResult = await this.repository.delete(id);
+    if (!deleteResult.affected) {
+      throw new EntityNotFoundError(Client, id);
+    }
   }
 }
